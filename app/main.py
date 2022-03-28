@@ -19,16 +19,14 @@ def mail_webhook():
     sender_hash = hashlib.sha1(email_sender.encode("utf-8")).hexdigest()
     avatar = "https://www.gravatar.com/avatar/%s?d=retro" % sender_hash
 
-    requests.post(
+    return requests.post(
         url="https://slack.com/api/chat.postMessage",
         json={
+            "token": SLACK_API_TOKEN,
             "channel": SLACK_CHANNEL,
             "icon_url": avatar,
             "parse": "full",
             "text": email_subject,
-            "token": SLACK_API_TOKEN,
             "username": email_sender,
         },
     )
-
-    return "OK"
