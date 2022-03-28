@@ -15,7 +15,7 @@ def mail_webhook():
     email_sender = request.form.get("from", request.form.get("sender", "[unknown]"))
     if " <" in email_sender:
         email_sender = email_sender.split(" <")[0]
-    sender_hash = hashlib.sha1(email_sender).hexdigest()
+    sender_hash = hashlib.sha1(email_sender.encode("utf-8")).hexdigest()
     avatar = "https://www.gravatar.com/avatar/%s?d=retro" % sender_hash
 
     requests.get(

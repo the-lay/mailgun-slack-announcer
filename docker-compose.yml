@@ -1,8 +1,11 @@
 version: "3.7"
 services:
   mailgun:
-    image:
-    restart: always
+    container_name: mailgun
+    image: thelay/mailgun-slack-announcer:latest
+    restart: unless-stopped
+    ports:
+      - "8000:80"
     env_file:
       - .env
     ports:
