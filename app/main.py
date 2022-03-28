@@ -19,8 +19,8 @@ def mail_webhook():
     sender_hash = hashlib.sha1(email_sender.encode("utf-8")).hexdigest()
     avatar = "https://www.gravatar.com/avatar/%s?d=retro" % sender_hash
 
-    resp = requests.post(
-        url=WEBHOOK_URL,
+    requests.post(
+        url="https://slack.com/api/chat.postMessage",
         json={
             "channel": SLACK_CHANNEL,
             "icon_url": avatar,
@@ -30,7 +30,5 @@ def mail_webhook():
             "username": email_sender,
         },
     )
-    print(resp)
-    return "OK"
 
-    # curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, World!"}'
+    return "OK"
