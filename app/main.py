@@ -29,7 +29,8 @@ def mail_webhook():
             "parse": "full",
             "text": f"Sender: {sender}\n"
             f"Recipients: {recipients}\n"
-            f"Time: {parsed_timestamp:%Y-%m-%d %H:%M:%S}\n"
+            f"Time: {parsed_timestamp:%Y-%m-%d %H:%M:%S} UTC\n"
+            f"# attachments: {n_attachments}\n"
             f"Subject: {subject}",
         },
     )
