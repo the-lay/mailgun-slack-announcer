@@ -27,15 +27,15 @@ def mail_webhook():
             "token": SLACK_API_TOKEN,
             "channel": SLACK_CHANNEL,
             "parse": "full",
-            "text": f"Sender: {sender}\n"
-            f"Recipients: {recipients}\n"
-            f"Time: {parsed_timestamp:%Y-%m-%d %H:%M:%S} UTC\n"
+            "text": f"*Sender:* {sender}\n"
+            f"*Recipients:* {recipients}\n"
+            f"*Time:* {parsed_timestamp:%Y-%m-%d %H:%M:%S} UTC\n"
             f"# attachments: {n_attachments}\n"
             f"Subject: {subject}",
         },
     )
 
-    content = requests.post(
+    requests.post(
         url="https://slack.com/api/chat.postMessage",
         data={
             "token": SLACK_API_TOKEN,
@@ -47,7 +47,7 @@ def mail_webhook():
     )
 
     for i in range(n_attachments):
-        attachment = request.form.get(f"attachment-{i}", "[unknown]")
+        attachment = request.files.get(f"attachment-{i}")
 
         requests.post(
             url="https://slack.com/api/files.upload",
