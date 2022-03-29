@@ -13,11 +13,6 @@ app = Flask(__name__)
 def mail_webhook():
     print(request.form.to_dict())
     email_subject = request.form.get("subject", "[unknown]")
-    email_sender = request.form.get("from", request.form.get("sender", "[unknown]"))
-    if " <" in email_sender:
-        email_sender = email_sender.split(" <")[0]
-    sender_hash = hashlib.sha1(email_sender.encode("utf-8")).hexdigest()
-    avatar = "https://www.gravatar.com/avatar/%s?d=retro" % sender_hash
 
     # Announcement
     announcement = requests.post(
@@ -25,10 +20,11 @@ def mail_webhook():
         data={
             "token": SLACK_API_TOKEN,
             "channel": SLACK_CHANNEL,
-            "icon_url": avatar,
             "parse": "full",
-            "text": f"Subject: {email_subject}",
-            "username": email_sender,
+            "text": f"Sender: {request.form.get('from', request.form.get('sender', '[unknown]'))}\n"
+            f"To: {request.form.get('recipient', '[unknown]')}\n"
+            f"Time: {request.form.get('recipient', '[unknown]')}\n"
+            f"Subject: {request.form.get('subject', '[unknown]')}",
         },
     )
 
@@ -39,10 +35,8 @@ def mail_webhook():
             "token": SLACK_API_TOKEN,
             "channel": SLACK_CHANNEL,
             "thread_ts": announcement.json()["ts"],
-            "icon_url": avatar,
             "parse": "full",
-            "text": f"{email_subject}",
-            "username": email_sender,
+            "text": f"{request.form.get('body-plain', '[unknown]')}",
         },
     )
 
