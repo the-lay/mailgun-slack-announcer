@@ -4,7 +4,6 @@ import requests
 from flask import Flask, request
 
 SLACK_API_TOKEN = os.environ.get("SLACK_API_TOKEN")
-WEBHOOK_URL = os.environ.get("WEBHOOK_URL")
 SLACK_CHANNEL = os.environ.get("SLACK_CHANNEL", "#general")
 
 app = Flask(__name__)
@@ -21,7 +20,7 @@ def mail_webhook():
 
     resp = requests.post(
         url="https://slack.com/api/chat.postMessage",
-        json={
+        data={
             "token": SLACK_API_TOKEN,
             "channel": SLACK_CHANNEL,
             "icon_url": avatar,
