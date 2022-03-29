@@ -1,6 +1,7 @@
 # Mailgun - Slack Announcer
 [<img src="https://img.shields.io/badge/dockerhub-images-green.svg?logo=Docker">](https://hub.docker.com/r/thelay/mailgun-slack-announcer/)
-[![Publish Docker image](https://github.com/the-lay/mailgun-slack-announcer/actions/workflows/dockerhub_publish.yml/badge.svg?branch=main)](https://github.com/the-lay/mailgun-slack-announcer/actions/workflows/dockerhub_publish.yml)
+[<img src="https://img.shields.io/badge/github-repository-green.svg?logo=Github">](https://github.com/the-lay/mailgun-slack-announcer)
+[<img src="https://github.com/the-lay/mailgun-slack-announcer/actions/workflows/dockerhub_publish.yml/badge.svg?branch=main">](https://github.com/the-lay/mailgun-slack-announcer/actions/workflows/dockerhub_publish.yml)
 
 Yet another incoming mailgun mail to slack utility.  
 For ease of use, containerized [(Docker Hub)](https://hub.docker.com/r/thelay/mailgun-slack-announcer/) 
