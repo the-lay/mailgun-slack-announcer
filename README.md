@@ -18,7 +18,7 @@ Heavily inspired by [chaidarun.com/slack-emails & artnc/router.py](https://chaid
     docker run --env-file .env containername:latest
     ```
 
-    ... Docker Compose: 
+    ... Docker Compose (forwarding output to port 8000): 
     ```docker-compose
     version: "3.7"
     services:

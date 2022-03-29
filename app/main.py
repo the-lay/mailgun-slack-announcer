@@ -19,7 +19,6 @@ def mail_webhook():
     parsed_timestamp = datetime.fromtimestamp(timestamp)
     subject = request.form.get("subject", "[unknown]")
     plain_text = request.form.get("body-plain", "[unknown]")
-    n_attachments = int(request.form.get("attachment-count", 0))
 
     announcement = requests.post(
         url="https://slack.com/api/chat.postMessage",
@@ -30,34 +29,33 @@ def mail_webhook():
             "text": f"*Sender:* {sender}\n"
             f"*Recipients:* {recipients}\n"
             f"*Time:* {parsed_timestamp:%Y-%m-%d %H:%M:%S} UTC\n"
-            f"# attachments: {n_attachments}\n"
-            f"Subject: {subject}",
+            f"*Subject:* {subject}",
         },
     )
+    parent_ts = announcement.json()["ts"]
 
     requests.post(
         url="https://slack.com/api/chat.postMessage",
         data={
             "token": SLACK_API_TOKEN,
             "channel": SLACK_CHANNEL,
-            "thread_ts": announcement.json()["ts"],
+            "thread_ts": parent_ts,
             "parse": "full",
             "text": f"{plain_text}",
         },
     )
 
-    for i in range(n_attachments):
-        attachment = request.files.get(f"attachment-{i}")
-
+    for attachment in request.files.values():
         requests.post(
             url="https://slack.com/api/files.upload",
             data={
                 "token": SLACK_API_TOKEN,
                 "channel": SLACK_CHANNEL,
-                "thread_ts": announcement.json()["ts"],
-                "parse": "full",
-                "file": attachment,
+                "thread_ts": parent_ts,
+                "filename": attachment.filename,
+                "initial_comment": attachment.filename,
             },
+            files={"file": (attachment.stream.read())},
         )
 
     return "OK"
