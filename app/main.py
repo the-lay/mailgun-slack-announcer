@@ -3,11 +3,15 @@ import requests
 from datetime import datetime
 
 from flask import Flask, request
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
+
 
 SLACK_API_TOKEN = os.environ.get("SLACK_API_TOKEN")
 SLACK_CHANNEL = os.environ.get("SLACK_CHANNEL", "#general")
 
 app = Flask(__name__)
+api = WebClient(token=SLACK_API_TOKEN)
 
 
 @app.route("/mail-webhook", methods=["POST"])
@@ -20,42 +24,31 @@ def mail_webhook():
     subject = request.form.get("subject", "[unknown]")
     plain_text = request.form.get("body-plain", "[unknown]")
 
-    announcement = requests.post(
-        url="https://slack.com/api/chat.postMessage",
-        data={
-            "token": SLACK_API_TOKEN,
-            "channel": SLACK_CHANNEL,
-            "parse": "full",
-            "text": f"*Sender:* {sender}\n"
+    try:
+        announcement = api.chat_postMessage(
+            channel=SLACK_CHANNEL,
+            text=f"📧📧📧\n"
+            f"*Sender:* {sender}\n"
             f"*Recipients:* {recipients}\n"
             f"*Time:* {parsed_timestamp:%Y-%m-%d %H:%M:%S} UTC\n"
             f"*Subject:* {subject}",
-        },
-    )
-    parent_ts = announcement.json()["ts"]
-
-    requests.post(
-        url="https://slack.com/api/chat.postMessage",
-        data={
-            "token": SLACK_API_TOKEN,
-            "channel": SLACK_CHANNEL,
-            "thread_ts": parent_ts,
-            "parse": "full",
-            "text": f"{plain_text}",
-        },
-    )
-
-    for attachment in request.files.values():
-        requests.post(
-            url="https://slack.com/api/files.upload",
-            data={
-                "token": SLACK_API_TOKEN,
-                "channel": SLACK_CHANNEL,
-                "thread_ts": parent_ts,
-                "filename": attachment.filename,
-                "initial_comment": attachment.filename,
-            },
-            files={"file": (attachment.stream.read())},
+            parse="full",
         )
+        thread_ts = announcement.get("ts")
+
+        api.chat_postMessage(
+            channel=SLACK_CHANNEL, thread_ts=thread_ts, text=plain_text
+        )
+
+        for attachment in request.files.values():
+            api.files_upload(
+                channels=SLACK_CHANNEL,
+                thread_ts=thread_ts,
+                filename=attachment.filename,
+                file=attachment.stream.read(),
+            )
+
+    except SlackApiError as e:
+        api.chat_postMessage(channel=SLACK_CHANNEL, text=e.response["error"])
 
     return "OK"
