@@ -1,11 +1,12 @@
 # Mailgun - Slack Announcer
-[<img src="https://img.shields.io/badge/dockerhub-images-green.svg?logo=Docker">](TODO)
-TODO GITHUB ACTIONS
+[<img src="https://img.shields.io/badge/dockerhub-images-green.svg?logo=Docker">](https://hub.docker.com/r/thelay/mailgun-slack-announcer/)
+[![Publish Docker image](https://github.com/the-lay/mailgun-slack-announcer/actions/workflows/dockerhub_publish.yml/badge.svg?branch=main)](https://github.com/the-lay/mailgun-slack-announcer/actions/workflows/dockerhub_publish.yml)
 
 Yet another incoming mailgun mail to slack utility.  
-For ease of use, containerized [(Docker Hub)](TODO) and configured with environment variables.
+For ease of use, containerized [(Docker Hub)](https://hub.docker.com/r/thelay/mailgun-slack-announcer/) 
+and configured with environment variables.
 
-Heavily inspired by [artnc/router.py](https://chaidarun.com/slack-emails).
+Heavily inspired by [chaidarun.com/slack-emails & artnc/router.py](https://chaidarun.com/slack-emails).
 
 ## Quick start
 
@@ -17,16 +18,17 @@ Heavily inspired by [artnc/router.py](https://chaidarun.com/slack-emails).
     ```
 
     ... Docker Compose: 
-    ```docker
+    ```docker-compose
     version: "3.7"
     services:
-        mailgun:
-            image:
-            restart: always
-            env_file:
-                - .env
-            ports:
-                - "8000:80"
+      mailgun:
+        container_name: mailgun
+        image: thelay/mailgun-slack-announcer:latest
+        restart: unless-stopped
+        env_file:
+          - .env
+        ports:
+          - "8000:80"
     ```
 
 In addition to env variables defined in `.env`, the docker image can take advantage of base image 
@@ -43,5 +45,7 @@ docker run -d --name mailgun -p 8000:80 mailgun-slack-announcer
 ```
 
 ## Message templating
-To modify the templating, TODO.  
+**TODO**
+
+To modify the templating, ...
 See all available message parameters that come from mailgun [on their docs](https://documentation.mailgun.com/en/latest/user_manual.html#parsed-messages-parameters).
