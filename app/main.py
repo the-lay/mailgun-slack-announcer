@@ -9,6 +9,8 @@ from slack_sdk.errors import SlackApiError
 
 SLACK_API_TOKEN = os.environ.get("SLACK_API_TOKEN")
 SLACK_CHANNEL = os.environ.get("SLACK_CHANNEL", "#general")
+UNFURL_LINKS = os.environ.get("UNFURL_LINKS", False)
+UNFURL_MEDIA = os.environ.get("UNFURL_MEDIA", False)
 
 app = Flask(__name__)
 api = WebClient(token=SLACK_API_TOKEN)
@@ -33,6 +35,8 @@ def mail_webhook():
             f"*Time:* {parsed_timestamp:%Y-%m-%d %H:%M:%S} UTC\n"
             f"*Subject:* {subject}",
             parse="full",
+            unfurl_links=UNFURL_LINKS,
+            unfurl_media=UNFURL_MEDIA,
         )
         thread_ts = announcement.get("ts")
 
