@@ -1,5 +1,4 @@
 import os
-import requests
 from datetime import datetime
 
 from flask import Flask, request
@@ -9,8 +8,8 @@ from slack_sdk.errors import SlackApiError
 
 SLACK_API_TOKEN = os.environ.get("SLACK_API_TOKEN")
 SLACK_CHANNEL = os.environ.get("SLACK_CHANNEL", "#general")
-UNFURL_LINKS = os.environ.get("UNFURL_LINKS", False)
-UNFURL_MEDIA = os.environ.get("UNFURL_MEDIA", False)
+UNFURL_LINKS = os.environ.get("UNFURL_LINKS", "False") == "True"
+UNFURL_MEDIA = os.environ.get("UNFURL_MEDIA", "False") == "True"
 
 app = Flask(__name__)
 api = WebClient(token=SLACK_API_TOKEN)
