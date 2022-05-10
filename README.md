@@ -15,7 +15,7 @@ Heavily inspired by [chaidarun.com/slack-emails & artnc/router.py](https://chaid
 2. Run the container and pass env file with...  
     ... Docker:
     ```bash
-    docker run -d -p 8000:80 --env-file .env containername:latest
+    docker run -d -p 8000:80 --env-file .env thelay/mailgun-slack-announcer:latest
     ```
 
     ... Docker Compose (forwarding output to port 8000): 
