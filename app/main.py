@@ -40,7 +40,11 @@ def mail_webhook():
         thread_ts = announcement.get("ts")
 
         api.chat_postMessage(
-            channel=SLACK_CHANNEL, thread_ts=thread_ts, text=plain_text
+            channel=SLACK_CHANNEL,
+            thread_ts=thread_ts,
+            text=plain_text,
+            unfurl_links=UNFURL_LINKS,
+            unfurl_media=UNFURL_MEDIA,
         )
 
         for attachment in request.files.values():
